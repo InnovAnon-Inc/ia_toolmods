@@ -9,4 +9,10 @@ Consolidated `enhanced` + `pooper` extensions + `fakery` extensions
 ![Screenshot](https://github.com/InnovAnon-Inc/ia_toolmods/blob/main/screenshot_5.png)
 ![Screenshot](https://github.com/InnovAnon-Inc/ia_toolmods/blob/main/screenshot_6.png)
 ![Screenshot](https://github.com/InnovAnon-Inc/ia_toolmods/blob/main/screenshot_7.png)
+![Screenshot](https://github.com/InnovAnon-Inc/ia_toolmods/blob/main/screenshot_8.png)
+![Screenshot](https://github.com/InnovAnon-Inc/ia_toolmods/blob/main/screenshot_9.png)
+
+Oops:
+
+![Screenshot](https://github.com/InnovAnon-Inc/ia_toolmods/blob/main/screenshot_10.png)
 

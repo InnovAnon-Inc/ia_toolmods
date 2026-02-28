@@ -11,6 +11,7 @@
 --     output: string with item name and quantity
 --
 -- FIXME don't need enhanced-poopy + poopy-enhanced unless they have different behaviors
+-- FIXME fakery:default_mese_crystal should not exist (we should be using fakery:mese)
 
 local modname = minetest.get_current_modname() or "ia_toolmods"
 
