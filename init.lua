@@ -250,7 +250,7 @@ local function inject_fake_crafts(recipe)
             fake_craft.type = "shapeless"
         end
 
-        minetest.log('action', '[ia_toolmods] Injecting fake craft for: ' .. fake_craft.output)
+        --minetest.log('action', '[ia_toolmods] Injecting fake craft for: ' .. fake_craft.output)
         minetest.register_craft(fake_craft)
     end
 end
