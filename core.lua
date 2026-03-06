@@ -12,13 +12,33 @@ local function get_fake_name(name)
 end
 
 local function ensure_fake_variant_fakery_check(name)
-    if name == 'fakery:mese' or name == 'fakery:diamond' then return true end
-    --if not name:find("^fakery:") then return true end
-    --if name == 'fakery:table_lv' then return false end
-    return false
+	if name == 'fakery:mese'     then return true end
+	if name == 'fakery:diamond'  then return true end
+	if name == 'fakery:obsidian' then return true end
+--	if name == 'fakery:mithril'  then -- TODO
+--		assert(minetest.get_modpath('moreores'))
+--		return true
+--	end
+--	if name == 'fakery:cloud'    then
+--		assert(minetest.get_modpath('cloud_items'))
+--		return true
+--	end
+--	if name == 'fakery:lava'     then
+--		assert(minetest.get_modpath('lavastuff'))
+--		return true
+--	end
+--	if name == 'fakery:op'       then
+--		assert(minetest.get_modpath('overpowered'))
+--		return true
+--	end
+	if name == 'fakery:uranium'  then
+		assert(minetest.get_modpath('technic_worldgen'))
+		return true
+	end
+	return false
 end
 
-function ia_counterfeit.ensure_fake_variant(name)
+function ia_counterfeit.ensure_fake_variant(name) -- TODO the sloc count is fatter than your mom
     if ia_counterfeit.substitutions[name] then return ia_counterfeit.substitutions[name] end
     --if name:find("^fakery:") or ia_counterfeit.processed_items[name] then return nil end
     if ensure_fake_variant_fakery_check(name) or ia_counterfeit.processed_items[name] then return nil end

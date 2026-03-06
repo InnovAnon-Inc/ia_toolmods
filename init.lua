@@ -11,13 +11,32 @@ assert(minetest.get_modpath('ia_util'))
 assert(ia_util ~= nil)
 local modname                    = minetest.get_current_modname() or "ia_counterfeit"
 local storage                    = minetest.get_mod_storage()
-ia_counterfeit                        = {
-    substitutions = {
+ia_counterfeit                   = {
+    substitutions   = {
         ["default:diamond"]      = "fakery:diamond",
         ["default:mese_crystal"] = "fakery:mese",
     },
     processed_items = {} 
 }
+if minetest.registered_items['fakery:obsidian'] then
+	ia_counterfeit.substitutions["default:obsidian_shard"] = "fakery:obsidian"
+end
+--if minetest.get_modpath("moreores") then -- TODO I need those specific item names
+--	ia_counterfeit.substitutions[...] = "fakery:mithril"
+--end
+--if minetest.get_modpath("cloud_items") then
+--	ia_counterfeit.substitutions[...] = "fakery:cloud"
+--end
+--if minetest.get_modpath("lavastuff") then
+--	ia_counterfeit.substitutions[...] = "fakery:lava"
+--end
+--if minetest.get_modpath("overpowered") then
+--	ia_counterfeit.substitutions[...] = "fakery:op"
+--end
+if minetest.get_modpath("technic_worldgen") then
+	ia_counterfeit.substitutions['technic:uranium_lump'] = 'fakery:uranium'
+end
+
 local modpath, S                 = ia_util.loadmod(modname)
 local log                        = ia_util.get_logger(modname)
 local assert                     = ia_util.get_assert(modname)
