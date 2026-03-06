@@ -15,6 +15,7 @@ local function ensure_fake_variant_fakery_check(name)
 	if name == 'fakery:mese'     then return true end
 	if name == 'fakery:diamond'  then return true end
 	if name == 'fakery:obsidian' then return true end
+	if name == 'fakery:gold'     then return true end
 --	if name == 'fakery:mithril'  then -- TODO
 --		assert(minetest.get_modpath('moreores'))
 --		return true
@@ -35,6 +36,8 @@ local function ensure_fake_variant_fakery_check(name)
 		assert(minetest.get_modpath('technic_worldgen'))
 		return true
 	end
+	if name == 'fakery:table'    then return false end
+	if name == 'fakery:table_lv' then return false end
 	return false
 end
 

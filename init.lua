@@ -21,6 +21,9 @@ ia_counterfeit                   = {
 if minetest.registered_items['fakery:obsidian'] then
 	ia_counterfeit.substitutions["default:obsidian_shard"] = "fakery:obsidian"
 end
+if minetest.registered_items['fakery:gold'] then
+	ia_counterfeit.substitutions["default:gold_ingot"]     = "fakery:gold"
+end
 --if minetest.get_modpath("moreores") then -- TODO I need those specific item names
 --	ia_counterfeit.substitutions[...] = "fakery:mithril"
 --end
@@ -34,7 +37,7 @@ end
 --	ia_counterfeit.substitutions[...] = "fakery:op"
 --end
 if minetest.get_modpath("technic_worldgen") then
-	ia_counterfeit.substitutions['technic:uranium_lump'] = 'fakery:uranium'
+	ia_counterfeit.substitutions['technic:uranium_lump']   = 'fakery:uranium'
 end
 
 local modpath, S                 = ia_util.loadmod(modname)
