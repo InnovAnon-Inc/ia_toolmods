@@ -180,37 +180,136 @@ function ia_counterfeit.ensure_fake_variant(name) -- TODO the sloc count is fatt
     end
     return ia_counterfeit.substitutions[name]
 end
-
-
-
-
-
-
-
-
-
-
-
----- Helper to generate permutations (Conceptual)
---local function get_combinations(recipe_items)
---    local results = {{}}
---    for _, item in ipairs(recipe_items) do
---        local fake = ia_counterfeit.get_fake_name(item) -- Check if fake exists
---        local next_step = {}
---        for _, combination in ipairs(results) do
---            -- Option A: Use the real one
---            local res_real = table.copy(combination)
---            table.insert(res_real, item)
---            table.insert(next_step, res_real)
+---- ia_counterfeit/core.lua
+-- FIXME improper group handling? e.g., can make a fake pickaxe with three meses and no sticks. there should be two group sticks
+--local MODNAME = minetest.get_current_modname()
+--local log = ia_util.get_logger(MODNAME)
 --
---            -- Option B: Use the fake one (if it exists)
---            if minetest.registered_items[fake] then
---                local res_fake = table.copy(combination)
---                table.insert(res_fake, fake)
---                table.insert(next_step, res_fake)
+---- Helper to get the registered fake name for an item
+--local function get_fake_name(name)
+--    local clean_name = name:match("^:(.+)") or name
+--    local m_name, i_name = clean_name:match("([^:]+):([^:]+)")
+--    if not m_name then m_name = "unknown"; i_name = clean_name end
+--    return "fakery:" .. m_name .. "_" .. i_name
+--end
+--
+---- Checks if an item is a known "base" fake item from the fakery mod
+--local function is_base_fake(name)
+--    local base_fakes = {
+--        ['fakery:mese'] = true, ['fakery:diamond'] = true, 
+--        ['fakery:obsidian'] = true, ['fakery:gold'] = true,
+--        ['fakery:mithril'] = true, ['fakery:cloud'] = true,
+--        ['fakery:lava'] = true, ['fakery:op'] = true,
+--        ['fakery:uranium'] = true
+--    }
+--    return base_fakes[name] or false
+--end
+--
+---- Recursive helper to generate all possible ingredient combinations
+--local function get_recipe_combinations(items_to_process)
+--    local results = {{}}
+--    
+--    for _, ingredient in ipairs(items_to_process) do
+--        local next_step = {}
+--        if type(ingredient) ~= "string" or ingredient == "" then
+--            for _, combo in ipairs(results) do
+--                local new_combo = table.copy(combo)
+--                table.insert(new_combo, ingredient or "")
+--                table.insert(next_step, new_combo)
+--            end
+--        else
+--            -- Check for a fake variant
+--            local f_ing = ia_counterfeit.ensure_fake_variant(ingredient)
+--            for _, combo in ipairs(results) do
+--                -- Option 1: Use the original (real) ingredient
+--                local combo_real = table.copy(combo)
+--                table.insert(combo_real, ingredient)
+--                table.insert(next_step, combo_real)
+--
+--                -- Option 2: Use the fake variant (if it exists)
+--                if f_ing then
+--                    local combo_fake = table.copy(combo)
+--                    table.insert(combo_fake, f_ing)
+--                    table.insert(next_step, combo_fake)
+--                end
 --            end
 --        end
 --        results = next_step
 --    end
 --    return results
+--end
+--
+--function ia_counterfeit.ensure_fake_variant(name)
+--    if ia_counterfeit.substitutions[name] then return ia_counterfeit.substitutions[name] end
+--    if is_base_fake(name) or ia_counterfeit.processed_items[name] then return nil end
+--    
+--    ia_counterfeit.processed_items[name] = true
+--    local recipes = minetest.get_all_craft_recipes(name)
+--    if not recipes then return nil end
+--
+--    local fake_name = get_fake_name(name)
+--
+--    for _, recipe in ipairs(recipes) do
+--        local method = recipe.method or "normal"
+--        local items = recipe.items or recipe.recipe
+--        assert(items, "Recipe items missing for " .. name)
+--
+--        local items_to_process = (type(items) == "table") and items or {items}
+--        local all_combinations = get_recipe_combinations(items_to_process)
+--
+--        for _, combo_items in ipairs(all_combinations) do
+--            local has_fake = false
+--            local used_mese, used_diamond = false, false
+--
+--            -- Evaluate this specific combination
+--            for _, ing in ipairs(combo_items) do
+--                if type(ing) == "string" then
+--                    if ing:find("^fakery:") then has_fake = true end
+--                    if ing == "default:mese_crystal" or ing == "fakery:mese" then used_mese = true end
+--                    if ing == "default:diamond" or ing == "fakery:diamond" then used_diamond = true end
+--                end
+--            end
+--
+--            -- Only register a recipe if it actually uses a counterfeit ingredient
+--            if has_fake then
+--                -- 1. Ensure Item Definition exists
+--                if not minetest.registered_items[fake_name] then
+--                    local original_def = minetest.registered_items[name]
+--                    if original_def then
+--                        local def = table.copy(original_def)
+--                        def = ia_counterfeit.apply_standard_enshittification(def, name, used_mese, used_diamond)
+--                        
+--                        log(3, "Registering fake variant: " .. fake_name)
+--                        if def.drawtype or minetest.registered_nodes[name] then
+--                            minetest.register_node(":" .. fake_name, def)
+--                        else
+--                            minetest.register_craftitem(":" .. fake_name, def)
+--                        end
+--                    end
+--                end
+--
+--                -- 2. Register the specific combination
+--                local craft_def = {
+--                    output = fake_name .. " " .. ItemStack(recipe.output):get_count(),
+--                    type = (method ~= "normal") and method or (method == "normal" and recipe.width == 0 and "shapeless" or nil)
+--                }
+--
+--                if method == "normal" and recipe.width > 0 then
+--                    local grid = {}
+--                    for y = 0, math.floor((#combo_items - 1) / recipe.width) do
+--                        local row = {}
+--                        for x = 1, recipe.width do table.insert(row, combo_items[y * recipe.width + x] or "") end
+--                        table.insert(grid, row)
+--                    end
+--                    craft_def.recipe = grid
+--                else
+--                    craft_def.recipe = (method == "cooking" or method == "fuel") and combo_items[1] or combo_items
+--                end
+--
+--                minetest.register_craft(craft_def)
+--                ia_counterfeit.substitutions[name] = fake_name
+--            end
+--        end
+--    end
+--    return ia_counterfeit.substitutions[name]
 --end
