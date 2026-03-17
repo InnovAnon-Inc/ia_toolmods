@@ -139,7 +139,7 @@ function ia_counterfeit.ensure_fake_variant(name) -- TODO the sloc count is fatt
                     def = ia_counterfeit.apply_standard_enshittification(def, name, used_mese, used_diamond)
 
                     -- D. Registration
-                    log(3, "Registering fake variant: " .. fake_name)
+                    --log(3, "Registering fake variant: " .. fake_name) -- TODO
                     if def.drawtype or minetest.registered_nodes[name] then
                         minetest.register_node(":" .. fake_name, def)
                     else
