@@ -18,6 +18,7 @@ ia_counterfeit                   = {
     },
     processed_items = {} 
 }
+ia_counterfeit.mod               = 'ia'
 if minetest.registered_items['fakery:obsidian'] then
 	ia_counterfeit.substitutions["default:obsidian_shard"] = "fakery:obsidian"
 end
